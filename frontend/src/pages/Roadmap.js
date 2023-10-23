@@ -92,6 +92,33 @@ const Roadmap = () => {
     "NEXT JS",
   ];
 
+  const roadmapData = [
+    {
+      skillName: "HTML",
+      courseTitle: "Ultimate html bootcamp",
+      courseImage: "https://img-c.udemycdn.com/course/240x135/625204_436a_3.jpg",
+      courseLink: "https://www.udemy.com/course/fullstack-web-development-course-projects-base/"
+    },
+    {
+      skillName: "Javascript",
+      courseTitle: "Best javascript bootcamp",
+      courseImage: "https://img-b.udemycdn.com/course/240x135/1565838_e54e_16.jpg",
+      courseLink: "https://www.udemy.com/course/fullstack-web-development-course-projects-base/"
+    },
+    {
+      skillName: "React",
+      courseTitle: "Top react bootcamp",
+      courseImage: "https://img-b.udemycdn.com/course/240x135/4505104_8592_8.jpg",
+      courseLink: "https://www.udemy.com/course/fullstack-web-development-course-projects-base/"
+    },
+    {
+      skillName: "Node",
+      courseTitle: "Ultimate html bootcamp",
+      courseImage: "https://img-c.udemycdn.com/course/240x135/625204_436a_3.jpg",
+      courseLink: "https://www.udemy.com/course/fullstack-web-development-course-projects-base/"
+    }
+  ]
+
   const handlePrev = () => {
     if (step > 0) {
       setStep((prev) => prev - 1);
