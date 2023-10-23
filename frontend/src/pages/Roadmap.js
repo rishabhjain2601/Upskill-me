@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Button from "../utils/Button";
 import Card from "../utils/Card";
-import {useLocation} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const Roadmap = () => {
@@ -17,7 +17,7 @@ const Roadmap = () => {
 
   // const career = location?.state.career;
   // const career = "engineering"
-  
+
   // const getRoadmap = async(career)=>{
   //   try{
   //     // console.log(obj.subcategories[0])
@@ -31,7 +31,7 @@ const Roadmap = () => {
   //       for (let index = 0; index < arr.length; index++) {
   //         const element = arr[index];
   //         await getUdemyCourses(element, index)//.then((ans)=>{console.log(ans)})
-          
+
   //       }
   //     })
   //   } catch(error){
@@ -39,11 +39,11 @@ const Roadmap = () => {
   //     console.log(error.response)
   //   }
   // }
-  
+
   // const getUdemyCourses= async(item, index)=>{
   //   try{
   //     console.log(item)
-      
+
   //     axios.post('http://localhost:4567/api/udemy', {inp: item})
   //     .then((response)=>{
   //       // setBackendDataUdemyCourses(backendDataUdemyCourses=>[...backendDataUdemyCourses, response.title])
@@ -63,7 +63,7 @@ const Roadmap = () => {
   // useEffect(()=>{
   //   getRoadmap(career)
   // },[])
-  
+
   const courses = [
     {
       title: "The Complete 2023 Web Development Bootcamp",
@@ -125,7 +125,7 @@ const Roadmap = () => {
     }
   };
   const handleNext = () => {
-    if (step < skills.length) {
+    if (step < roadmapData.length) {
       setStep((prev) => prev + 1);
     }
   };
@@ -134,7 +134,7 @@ const Roadmap = () => {
   // to mark that SKILL as completed...
 
   return (
-    
+
     <div className="bg-[#111C25] w-11/12 md:w-10/12 mx-auto my-10 py-14 px-8 md:px-16 rounded-3xl">
       {/* Button */}
       <div className="flex justify-between">
@@ -142,22 +142,20 @@ const Roadmap = () => {
         <Button onClick={handleNext}>Next Step</Button>
       </div>
       {/* Timeline */}
-      <div className="w-[10%] hidden xl:block h-[4px] bg-black opacity-80 m-auto" />
+      {/* <div className="w-[10%] hidden xl:block h-[4px] bg-black opacity-80 m-auto" /> */}
       <section id="cd-timeline" className="cd-container font-bold">
-        {skills.map((ele, index) => {
+        {roadmapData.map((ele, index) => {
           return (
             <div className="cd-timeline-block">
               <div
-                className={`cd-timeline-img ${
-                  step > index ? "is-done" : ""
-                } cd-picture`}
+                className={`cd-timeline-img ${step > index ? "is-done" : ""
+                  } cd-picture`}
               ></div>
               <div
-                className={`cd-timeline-content ${
-                  step > index ? "is-done" : ""
-                }`}
+                className={`cd-timeline-content ${step > index ? "is-done" : ""
+                  }`}
               >
-                <h2>{ele}</h2>
+                <h2>{ele.skillName}</h2>
               </div>
             </div>
           );
@@ -171,8 +169,8 @@ const Roadmap = () => {
           Recommended Courses for ReactJS-
         </h2>
         <div className="flex items-center gap-4 justify-center md:justify-evenly flex-wrap my-10">
-          {courses.map((ele, index) => {
-            return <Card link={ele.link} image={ele.image} name={ele.title} />;
+          {roadmapData.map((ele, index) => {
+            return <Card link={ele.courseLink} image={ele.courseImage} name={ele.courseTitle} />;
           })}
         </div>
       </div>

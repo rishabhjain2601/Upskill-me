@@ -18,7 +18,7 @@ const CareerQuiz = () => {
         ]
     }
 
-    const callApi= async(userData)=>{
+    const callApi = async(userData)=>{
         try{
             console.log("calling api now")
             setIsLoading(true)
@@ -53,7 +53,7 @@ const CareerQuiz = () => {
         console.log(userData)
         const userDataObj = {personality: userData[0], answers: userData[1]}
         await callApi(userDataObj)
-        // navigate('/counselling-result', {state: {userDataObj}})
+        navigate('/roadmap/result', {state: {userDataObj}})
     }
     const quizQues = () => {
         if (!quesType) {
