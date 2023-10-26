@@ -13,6 +13,7 @@ import SkillRoadmap from "./pages/SkillRoadmap";
 import Roadmap from "./pages/Roadmap";
 import CareerQuiz from "./pages/CareerQuiz";
 import Aptitude_form from "./pages/Aptitude_form";
+import ChooseCareerCategory from "./pages/ChooseCareerCategory";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             <Route path="result" index element={<Roadmap />} />
           </Route>
           <Route path="/quiz" index element={<CareerQuiz />} />
+          <Route path="/choose" index element={<ChooseCareerCategory/>}/>
         </Route>
       </Routes>
     </Router>

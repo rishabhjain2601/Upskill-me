@@ -13,9 +13,10 @@ const Roadmap = () => {
   const [finalResponse, setFinalResponse] = useState()
   const [udemyArray, setUdemyArray] = useState([])
 
-  // const location = useLocation()
+  const location = useLocation()
 
-  // const career = location?.state.career;
+  const roadmapData3 = location?.state.obj;
+  console.log(roadmapData3)
   // const career = "engineering"
 
   // const getRoadmap = async(career)=>{
@@ -64,35 +65,36 @@ const Roadmap = () => {
   //   getRoadmap(career)
   // },[])
 
-  const courses = [
-    {
-      title: "The Complete 2023 Web Development Bootcamp",
-      image: "https://img-b.udemycdn.com/course/240x135/1565838_e54e_16.jpg",
-      link: "https://www.udemy.com/course/the-complete-web-development-bootcamp/",
-    },
-    {
-      title: "The Web Developer Bootcamp 2023",
-      image: "https://img-c.udemycdn.com/course/240x135/625204_436a_3.jpg",
-      link: "https://www.udemy.com/course/the-web-developer-bootcamp/",
-    },
-    {
-      title: "The Web Development Bootcamp",
-      image: "https://img-b.udemycdn.com/course/240x135/4505104_8592_8.jpg",
-      link: "https://www.udemy.com/course/fullstack-web-development-course-projects-base/",
-    },
-  ];
+  // redundant variables
+  // const courses = [
+  //   {
+  //     title: "The Complete 2023 Web Development Bootcamp",
+  //     image: "https://img-b.udemycdn.com/course/240x135/1565838_e54e_16.jpg",
+  //     link: "https://www.udemy.com/course/the-complete-web-development-bootcamp/",
+  //   },
+  //   {
+  //     title: "The Web Developer Bootcamp 2023",
+  //     image: "https://img-c.udemycdn.com/course/240x135/625204_436a_3.jpg",
+  //     link: "https://www.udemy.com/course/the-web-developer-bootcamp/",
+  //   },
+  //   {
+  //     title: "The Web Development Bootcamp",
+  //     image: "https://img-b.udemycdn.com/course/240x135/4505104_8592_8.jpg",
+  //     link: "https://www.udemy.com/course/fullstack-web-development-course-projects-base/",
+  //   },
+  // ];
 
-  const skills = [
-    "HTML, CSS",
-    "Javascript",
-    "React JS",
-    "Node JS",
-    "Express JS",
-    "Mongo DB",
-    "NEXT JS",
-  ];
+  // const skills = [
+  //   "HTML, CSS",
+  //   "Javascript",
+  //   "React JS",
+  //   "Node JS",
+  //   "Express JS",
+  //   "Mongo DB",
+  //   "NEXT JS",
+  // ];
 
-  const roadmapData = [
+  const roadmapData = roadmapData3?? [
     {
       skillName: "HTML",
       courseTitle: "Ultimate html bootcamp",
