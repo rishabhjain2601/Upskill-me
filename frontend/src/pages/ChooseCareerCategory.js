@@ -52,23 +52,23 @@ const ChooseCareerCategory = () => {
       }
 
   return (
-    <div>
-        <h1>your recommended career is {ApiResponse.output.career.name}</h1>
-        <h2>Why we recommended this? <br></br> {ApiResponse.output.career.reason}</h2>
-        <h2>Following are the specific domains in your recommended career.</h2>
-        <h2> Choose a domain to view its roadmap</h2>
+    <div className='ml-10'>
+        <h1>Your recommended career is <span className='text-yellow-500'>{ApiResponse.output.career.name}</span></h1>
+        <h2 className='text-2xl text-yellow-500 pb-2'>Why we recommended this?</h2><p className='text-xl w-[70%]'> {ApiResponse.output.career.reason}</p><br />
+        <h2 className='text-xl text-yellow-500'>Following are the specific domains in your recommended career :</h2>
+        <h2> (Choose a domain to view its roadmap)</h2>
         <div className='flex-col flex gap-4 justify-center my-5'>
-            <p className='flex gap-3'>
-                <button className='bg-gray-500 p-4 rounded-sm' onClick={()=>{createRoadmap(ApiResponse.output.career.categories[0][0])}}>{ApiResponse.output.career.categories[0][0]}</button>
-                <p>{ApiResponse.output.career.categories[0][1]}</p>
+            <p className='flex gap-3 my-2'>
+                <button className='bg-yellow-500 px-4 py-3 text-black font-semibold rounded-sm' onClick={()=>{createRoadmap(ApiResponse.output.career.categories[0][0])}}>{ApiResponse.output.career.categories[0][0]}</button>
+                <p className='w-[50%] px-2'>{ApiResponse.output.career.categories[0][1]}</p>
             </p>
-            <p className='flex gap-3'>
-                <button className='bg-gray-500 p-4 rounded-sm' onClick={()=>{createRoadmap(ApiResponse.output.career.categories[1][0])}}>{ApiResponse.output.career.categories[1][0]}</button>
-                <p>{ApiResponse.output.career.categories[1][1]}</p>
+            <p className='flex gap-3 my-2'>
+                <button className='bg-yellow-500 px-4 py-3 text-black font-semibold rounded-sm' onClick={()=>{createRoadmap(ApiResponse.output.career.categories[1][0])}}>{ApiResponse.output.career.categories[1][0]}</button>
+                <p className='w-[50%] px-2'>{ApiResponse.output.career.categories[1][1]}</p>
             </p>
-            <p className='flex gap-3'>
-                <button className='bg-gray-500 p-4 rounded-sm' onClick={()=>{createRoadmap(ApiResponse.output.career.categories[2][0])}}>{ApiResponse.output.career.categories[2][0]}</button>
-                <p>{ApiResponse.output.career.categories[2][1]}</p>
+            <p className='flex gap-3 my-2'>
+                <button className='bg-yellow-500 px-4 py-3 text-black font-semibold rounded-sm' onClick={()=>{createRoadmap(ApiResponse.output.career.categories[2][0])}}>{ApiResponse.output.career.categories[2][0]}</button>
+                <p className='w-[50%] px-2' >{ApiResponse.output.career.categories[2][1]}</p>
             </p>
         </div>
 
