@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const ChooseCareerCategory = () => {
 
     const navigate = useNavigate()
+    const location = useLocation()
     const [isLoading, setIsLoading] = useState(false)
 
-    const userData = {"personality":["a"], "answers": [{"what are your skills":"physics"},{"do you like technology?": "yes"}, {"what skill do you already know": "verilog"}]}
+    const userData = location.state.userData?? {"personality":["a"], "answers": [{"what are your skills":"physics"},{"do you like technology?": "yes"}, {"what skill do you already know": "verilog"}]}
 
-    const ApiResponse = {
+    const ApiResponse = location.state.backendOutput?? {
         "output": {
           "career":
             {

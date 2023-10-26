@@ -9,7 +9,7 @@ const Header = () => {
       <nav className="flex justify-between items-center p-5 text-gray-50 text-lg font-semibold select-none">
         <div className="flex gap-16">
           <div>
-            🎯 <Link to="/" className="text-yellow-500">LaunchPad</Link>
+            🎯 <Link to="/" className="text-yellow-500">Upskill Me</Link>
           </div>
           <div>
             <ul className="flex gap-4">

@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const Roadmap = () => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
 
   const [backendDataGpt1, setBackendDataGpt1] = useState()
   const [backendDataUdemyCourses, setBackendDataUdemyCourses] = useState([])
@@ -15,7 +15,7 @@ const Roadmap = () => {
 
   const location = useLocation()
 
-  const roadmapData3 = location?.state.obj;
+  const roadmapData3 = location?.state?.obj;
   console.log(roadmapData3)
   // const career = "engineering"
 
@@ -148,7 +148,7 @@ const Roadmap = () => {
       <section id="cd-timeline" className="cd-container font-bold">
         {roadmapData.map((ele, index) => {
           return (
-            <div className="cd-timeline-block">
+            <div className="cd-timeline-block" key={index}>
               <div
                 className={`cd-timeline-img ${step > index ? "is-done" : ""
                   } cd-picture`}
@@ -168,12 +168,10 @@ const Roadmap = () => {
       {/* Suggested courses */}
       <div className="my-10">
         <h2 className="text-3xl font-semibold">
-          Recommended Courses for ReactJS-
+          Recommended Course for this step-
         </h2>
         <div className="flex items-center gap-4 justify-center md:justify-evenly flex-wrap my-10">
-          {roadmapData.map((ele, index) => {
-            return <Card link={ele.courseLink} image={ele.courseImage} name={ele.courseTitle} />;
-          })}
+        <Card link={roadmapData[step-1].courseLink} image={roadmapData[step-1].courseImage} name={roadmapData[step-1].courseTitle}/>
         </div>
       </div>
     </div>

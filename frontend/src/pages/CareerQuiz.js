@@ -22,12 +22,13 @@ const CareerQuiz = () => {
         try{
             console.log("calling api now")
             setIsLoading(true)
-          axios.post('http://localhost:4567/api/recommendedCareer', {userData: userData})
+          axios.post('http://localhost:4567/api/recommendUpskillCareers', {userData: userData})
           .then((response)=>{
             // const obj = JSON.parse(response.data.output)
-            const obj = response.data.output
-            console.log("navigating to result")
-            navigate('/counselling-result', {state: {obj}})
+            const obj = response.data
+            console.log("navigating to choose")
+            console.log(obj)
+            navigate('/choose', {state: {backendOutput: obj, userData: userData}})
           })
         } catch(error){
           console.log(error.response)
@@ -53,7 +54,7 @@ const CareerQuiz = () => {
         console.log(userData)
         const userDataObj = {personality: userData[0], answers: userData[1]}
         await callApi(userDataObj)
-        navigate('/roadmap/result', {state: {userDataObj}})
+        // navigate('/choose', {state: {userDataObj}})
     }
     const quizQues = () => {
         if (!quesType) {

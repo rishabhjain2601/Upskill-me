@@ -18,7 +18,7 @@ const {rArray, aArray, iArray, sArray, eArray, cArray} = require('./personalityA
 const configuration = new Configuration({
     // apiKey: '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',
     // apiKey: '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'
-    apiKey: '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'
+    apiKey: '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'
   });
   
   const openai = new OpenAIApi(configuration);
