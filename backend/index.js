@@ -1,6 +1,7 @@
 const express = require('express');
 const { Configuration, OpenAIApi } = require("openai");
 const axios = require('axios')
+require('dotenv').config()
 
 const app = express();
 const PORT = 4567;
@@ -16,9 +17,7 @@ const {rArray, aArray, iArray, sArray, eArray, cArray} = require('./personalityA
 
 
 const configuration = new Configuration({
-    // apiKey: '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',
-    // apiKey: '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'
-    apiKey: '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'
+    apiKey: process.env.OPENAI_KEY
   });
   
   const openai = new OpenAIApi(configuration);
