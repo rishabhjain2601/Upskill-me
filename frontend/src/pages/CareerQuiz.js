@@ -22,7 +22,7 @@ const CareerQuiz = () => {
         try{
             console.log("calling api now")
             setIsLoading(true)
-          axios.post('http://localhost:4567/api/recommendUpskillCareers', {userData: userData})
+          axios.post('https://upskillme.onrender.com/api/recommendUpskillCareers', {userData: userData})
           .then((response)=>{
             // const obj = JSON.parse(response.data.output)
             const obj = response.data

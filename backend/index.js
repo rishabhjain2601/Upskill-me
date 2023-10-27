@@ -274,7 +274,7 @@ app.post('/api/recommendUpskillCareers', async(req,res)=>{
 // required: third question is about 'kya kya already aata hai'
 app.post('/api/generateRoadmap', async(req, res)=>{
   console.log(req.body.career)
-  const preKnowledge = Object.values(req.body.userData.answers[2])[0]
+  const preKnowledge = req.body.userData.answers.length>2? Object.values(req.body.userData.answers[2])[0] : false
 
   prompt = `a student has decided to pursue ${req.body.career} as a career. He needs to learn the necessary skills to land a good ${req.body.career} job. Your job is to create a step by step roadmap of specific skills that the student should learn to achieve his goal.
   ${preKnowledge?`He has already learnt the following skills: ${preKnowledge}

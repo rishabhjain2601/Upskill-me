@@ -137,7 +137,7 @@ const Home = () => {
             <h3
               className="text-xl sm:text-2xl text-center font-semibold text-[#9AAFC3] mt-2 sm:mt-4 sm:tracking-wider home-font2"
             >
-              Latest news at LaunchPad
+              Latest news related to your skill
             </h3>
             <div className="text-center mt-4 sm:mt-8">
               <input
@@ -165,7 +165,7 @@ const Home = () => {
               <button
                 className="w-full lg:w-1/2 rounded-md bg-yellow-400 py-2 px-6 text-lg font-bold text-gray-900 hover:bg-yellow-300 active:scale-95 shadow-sm shadow-yellow-300/50 home-font2"
               >
-                TELEGRAM
+                DISCORD
               </button>
               <button
                 className="mt-2 lg:mt-0 w-full lg:w-1/2 rounded-md bg-purple-400 py-2 px-6 text-lg font-bold text-gray-900 hover:bg-purple-300 active:scale-95 shadow-sm shadow-purple-300/50 lg:ml-4 home-font2"

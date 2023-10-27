@@ -1,26 +1,26 @@
 [
   {
     "id": 1,
-    "question": "What is a subject/an activity you are passionate about?(if any)",
+    "question": "Any vague idea of the kind of career you'd like to pursue? (optional)",
     "options": [],
     "isMCQ": false
   },
   {
     "id": 2,
-    "question": "Any extracurricular course that you have taken up?",
+    "question": "What is a subject/an activity you are passionate about? (if any)",
     "options": [],
     "isMCQ": false
   },
   {
     "id": 3,
-    "question": "Do you prefer academics or extracurriculars",
-    "options": ["academics", "extracurriculars", "both", "."],
-    "isMCQ": true
+    "question": "What are some courses taken/skills related to your career that you have already learnt? (if any)",
+    "options": [],
+    "isMCQ": false
   },
   {
     "id": 4,
     "question": "Which one do you enjoy more:",
-    "options": ["Talking to people", "Building/learning things", ".", "."],
+    "options": ["Talking to people", "Building/learning things", " ", " "],
     "isMCQ": true
   },
   {

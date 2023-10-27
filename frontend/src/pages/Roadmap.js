@@ -22,7 +22,7 @@ const Roadmap = () => {
   // const getRoadmap = async(career)=>{
   //   try{
   //     // console.log(obj.subcategories[0])
-  //     axios.post('http://localhost:4567/api/gpt2', {inp: career})
+  //     axios.post('https://upskillme.onrender.com/api/gpt2', {inp: career})
   //     .then(async(response)=>{
   //       setFinalResponse(response.data.output)
   //      // const obj = JSON.parse(finalResponse)
@@ -45,7 +45,7 @@ const Roadmap = () => {
   //   try{
   //     console.log(item)
 
-  //     axios.post('http://localhost:4567/api/udemy', {inp: item})
+  //     axios.post('https://upskillme.onrender.com/api/udemy', {inp: item})
   //     .then((response)=>{
   //       // setBackendDataUdemyCourses(backendDataUdemyCourses=>[...backendDataUdemyCourses, response.title])
   //       // // console.log(JSON.stringify(backendDataUdemyCourses))
