@@ -58,7 +58,7 @@ const CareerQuiz = () => {
     }
     const quizQues = () => {
         if (!quesType) {
-            if (currentQuestionIndex < 9) {
+            if (currentQuestionIndex < 8) {
                 return (
                     <>
                         <QuesType1
@@ -72,7 +72,7 @@ const CareerQuiz = () => {
                                 <div className='loader'></div>
                             </div>
                             :
-                        <div className="h-8 bg-yellow-400 mx-auto p-3 w-24 text-black text-center flex justify-center items-center" onClick={()=>{passValue('')}}><p className=''>submit</p></div>
+                        <div className="h-8 bg-yellow-400 hover:bg-yellow-300 mx-auto p-3 w-24 text-black cursor-pointer text-center flex justify-center items-center" onClick={()=>{passValue('')}}><p className=''>Submit</p></div>
                     }</>
                 );
             }
@@ -109,7 +109,7 @@ const CareerQuiz = () => {
     return (
         <div>
             <div className='text-5xl mx-auto mt-24 w-fit'>Career Quiz</div>
-            <div className='mx-auto w-fit text-2xl mt-10'>Question {currentQuestionIndex + 1}/10</div>
+            <div className='mx-auto w-fit text-2xl mt-10'>Question {currentQuestionIndex + 1}/8</div>
             <div className="w-[60%] mx-auto mt-4 bg-gray-950 rounded-full h-2.5 dark:bg-gray-700">
                 <div className={`bg-yellow-400 h-2.5 rounded-full w-[${wPercent}]`} ></div>
             </div>
