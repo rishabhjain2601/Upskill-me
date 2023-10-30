@@ -41,31 +41,31 @@ const Home = () => {
                 className="absolute -right-10"
               />
             </div>
-            <div className="flex mt-8 gap-2 sm:gap-4 lg:gap-8">
-              <div>
+            <div className="flex mt-8 gap-2 justify-center sm:gap-4 lg:gap-8">
+              <div className="w-[300px]">
                 <a href="#"
                 ><img
-                    src={QuickLink}
+                    src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7P2JXV1XLZwMxe7IxCbJB_-NkBp5ZgG7jug&usqp=CAU'
                     alt="link image"
-                    className="hover:opacity-80"
+                    className="hover:opacity-80 rounded-2xl"
                   /></a>
                 <h4 className="text-lg sm:text-xl text-center font-semibold home-font2">Career Quiz</h4>
               </div>
-              <div>
+              <div className="w-[300px]">
                 <a href="#"
                 ><img
-                    src={QuickLink}
+                    src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnDqYoGHl4oWNA8oYPKAv6cL8i9aVbxtsrNg&usqp=CAU'
                     alt="link image"
-                    className="hover:opacity-80"
+                    className="hover:opacity-80 rounded-2xl"
                   /></a>
                 <h4 className="text-lg sm:text-xl text-center font-semibold home-font2">Roadmap</h4>
               </div>
-              <div>
+              <div className="w-[300px]">
                 <a href="#"
                 ><img
-                    src={QuickLink}
+                    src='https://www.appsmith.com/_next/image?url=https%3A%2F%2Fimages.ctfassets.net%2Flpvian6u6i39%2F7ASJaqoLu8ftXgHQ0Qjxt8%2Fea1d5e64708539fff075ca9981a11cc2%2FKPI_dashboard_____Appsmith.png&w=3840&q=75'
                     alt="link image"
-                    className="hover:opacity-80"
+                    className="hover:opacity-80 rounded-2xl"
                   /></a>
                 <h4 className="text-lg sm:text-xl text-center font-semibold home-font2">DashBoard</h4>
               </div>
@@ -137,7 +137,7 @@ const Home = () => {
             <h3
               className="text-xl sm:text-2xl text-center font-semibold text-[#9AAFC3] mt-2 sm:mt-4 sm:tracking-wider home-font2"
             >
-              Latest news at LaunchPad
+              Latest news related to your skill
             </h3>
             <div className="text-center mt-4 sm:mt-8">
               <input
@@ -165,7 +165,7 @@ const Home = () => {
               <button
                 className="w-full lg:w-1/2 rounded-md bg-yellow-400 py-2 px-6 text-lg font-bold text-gray-900 hover:bg-yellow-300 active:scale-95 shadow-sm shadow-yellow-300/50 home-font2"
               >
-                TELEGRAM
+                DISCORD
               </button>
               <button
                 className="mt-2 lg:mt-0 w-full lg:w-1/2 rounded-md bg-purple-400 py-2 px-6 text-lg font-bold text-gray-900 hover:bg-purple-300 active:scale-95 shadow-sm shadow-purple-300/50 lg:ml-4 home-font2"
