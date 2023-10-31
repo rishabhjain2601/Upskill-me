@@ -12,7 +12,7 @@ const QuesType1 = ({ onSubmit, questions, currentQuestionIndex, setCurrentQuesti
   }
 
   const clickNext = () => {
-    if (currentQuestionIndex < questions.length) {//removed && ans1
+    if (currentQuestionIndex < questions.length -1) {//removed && ans1
       onSubmit(`${ans1}`)
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       document.getElementById('ansArea1').value = ''
@@ -49,7 +49,7 @@ const QuesType1 = ({ onSubmit, questions, currentQuestionIndex, setCurrentQuesti
         <div className="flex justify-between mt-5">
           <Button onClick={clickPrev}>Previous</Button>
           {/* <div className="bg-yellow-400">submit</div> */}
-          <Button type="submit" onClick={clickNext}>Next</Button>
+          <Button type="submit" onClick={clickNext} >Next</Button>
         </div>
       </form>
     </div>
