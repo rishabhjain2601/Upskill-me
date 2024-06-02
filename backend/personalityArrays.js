@@ -549,10 +549,3 @@ const cArray = [
         "degree": "M.Sc, PHD , NET exam"
       }
 ]
-
-exports.rArray = rArray
-exports.aArray = aArray
-exports.iArray = iArray
-exports.sArray = sArray
-exports.eArray = eArray
-exports.cArray = cArray

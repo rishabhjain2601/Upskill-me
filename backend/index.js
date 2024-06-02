@@ -1,152 +1,199 @@
-const express = require('express');
-const { Configuration, OpenAIApi } = require("openai");
-const axios = require('axios')
-require('dotenv').config()
+import express from 'express'
+import { Configuration, OpenAIApi } from "openai";
+// const connectDB = require('./db/connectdb.js');
+import connectDB from './db/connectdb.js';
+import './models/User.js'
+import axios from 'axios'
+import './personalityArrays.js'
+import userModel from './models/User.js';
+import bcrypt from 'bcrypt'
+import dotenv from 'dotenv'
+dotenv.config()
 
+import cors from 'cors'
+import bodyParser from "body-parser"
 const app = express();
 const PORT = 4567;
-const cors = require("cors");
-const bodyParser = require("body-parser");
+const DATABASE_URL = "mongodb://0.0.0.0:27017"
 
 app.use(cors());
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const {rArray, aArray, iArray, sArray, eArray, cArray} = require('./personalityArrays.js')
-
-
 const configuration = new Configuration({
-    apiKey: process.env.OPENAI_KEY
-  });
-  
-  const openai = new OpenAIApi(configuration);
-  
-app.listen(PORT, (error) =>{
-    if(!error)
-        console.log("Server is Successfully Running,and App is listening on port "+ PORT)
-    else 
-        console.log("Error occurred, server can't start", error);
-    }
+  apiKey: process.env.OPENAI_KEY
+});
+
+const openai = new OpenAIApi(configuration);
+
+connectDB(DATABASE_URL)
+
+app.listen(PORT, (error) => {
+  if (!error)
+    console.log("Server is Successfully Running,and App is listening on port " + PORT)
+  else
+    console.log("Error occurred, server can't start", error);
+}
 );
 
+app.post('/signup', async (req, res) => {
+  const userExists = await userModel.findOne({ email: req.body.email })
+  if (userExists) {
+    res.send("User already exists")
+  } else {
+    const saltRounds = 10;
+    const data = {
+      name : req.body.name,
+      email : req.body.email,
+      password : req.body.password
+    }
+    const hashedPassword = await bcrypt.hash(data.password, saltRounds);
+    data.password = hashedPassword
 
-app.post('/api/gpt', async(req,res)=>{
-    
-      const basePromptPrefix = `based on the given details about a student, identify the most suitable career for him in the specified format. 
-      student details:`;
-      const basePromptSuffix = `Return the Suitable career option and upto three subcategories of the profession which will be suitable for the student. Response format: {"career_option": "PROFESSION_NAME", "subcategories": [SUBCATEGORY_1, SUBCATEGORY_2, SUBCATEGORY_3]}`
-      output = await generateGptOutput(req.body.inp, basePromptPrefix, basePromptSuffix);
-      console.log(output)//this console log is not working
-      res.json({output: output})
+    userModel.create(data)
+      .then(users => res.json(users))
+      .catch(err => res.json(err))
+  }
 })
 
-app.post('/api/gpt2', async(req,res)=>{
-    
+app.post('/login', async (req, res) => {
+  try {
+    const check = await userModel.findOne({email: req.body.email});
+    if(!check){
+      res.send("User does not exist")
+    }
+    const isPasswordMatch = await bcrypt.compare(req.body.password, check.password)
+    if(isPasswordMatch){
+      res.send('Password matched')
+    }
+    else{
+      res.send("Wrong password")
+    }
+
+  } catch{
+    res.send("Wrong details")
+  }
+})
+
+app.post('/api/gpt', async (req, res) => {
+
+  const basePromptPrefix = `based on the given details about a student, identify the most suitable career for him in the specified format. 
+      student details:`;
+  const basePromptSuffix = `Return the Suitable career option and upto three subcategories of the profession which will be suitable for the student. Response format: {"career_option": "PROFESSION_NAME", "subcategories": [SUBCATEGORY_1, SUBCATEGORY_2, SUBCATEGORY_3]}`
+  output = await generateGptOutput(req.body.inp, basePromptPrefix, basePromptSuffix);
+  console.log(output)//this console log is not working
+  res.json({ output: output })
+})
+
+app.post('/api/gpt2', async (req, res) => {
+
   const basePromptPrefix = `A student has decided to pursue a career, and needs the list of necessary skills to learn for that, step by step. you have to provide the list. Using the given details, find out what skills the student already has and do not include them in the list. The list should only contain skills that are essential for the particular career, and which can be learnt through online courses. Do not include more than 6 skills. for example:" to become a backend developer, the skills would be ["javascript", "nodejs", "expressjs", "mongodb"]"`;
   const basePromptSuffix = `Return 4 skills, in correct order in an array. Example response: ["javascript", "nodejs", "expressjs", "mongodb"] Do not return anything other than the array in response`
   const basePrompt = `Decided career: ${req.body.inp}, student details: ${req.body.studentData}`
   output = await generateGptOutput(basePrompt, basePromptPrefix, basePromptSuffix);
   console.log(output)//this console log is not working
-  res.json({output: output})
+  res.json({ output: output })
 })
 
-app.post('/api/gptNew', async(req,res)=>{
-    
+app.post('/api/gptNew', async (req, res) => {
+
   const basePromptPrefix = `A student has decided to pursue a career, and needs the list of necessary skills to learn for that, step by step. you have to provide the list. Using the given details, find out what skills the student already has and do not include them in the list. The list should only contain skills that are essential for the particular career, and which can be learnt through online courses. Do not include more than 4 skills. for example: to become a backend developer, the skills would be ["javascript", "nodejs", "expressjs", "mongodb"]`;
   const basePromptSuffix = `Return 4 skills, in correct order in an array. Example response: ["javascript", "nodejs", "expressjs", "mongodb"] Do not return anything other than the array in response`
   const basePrompt = `Decided career: ${req.body.inp}`
   output = await generateGptOutput(basePrompt, basePromptPrefix, basePromptSuffix);
   console.log(output)//this console log is not working
-  res.json({output: output})
+  res.json({ output: output })
 })
 
 
-app.post('/api/udemy', async(req,res)=>{
+app.post('/api/udemy', async (req, res) => {
   console.log(req.body.inp)
   axios.get(`https://www.udemy.com/api-2.0/courses/?page_size=2&search=${req.body.inp}`, {
-      headers: {
-          "Accept": "application/json, text/plain, */*",
-          "Authorization": "Basic SDZuSklkWHdqQjJnYm40cjdQSDlUa3lKOFhEVGFZeWFEeGxDTDBUQjpSQ3gzYkswOEt1YmxuSDNLOXdxNjJma3BQMkQ2dlNld1Z2cXlrQ2RiZXlYMkdqZVRDWmVlZU80T0ZOUExwb3FjRjJ0d2U0MXVScmM5WHg4OVptcW9RbFVNSzdCQmxsc0JHQW1SVmdHSFVjOEJlMHdxdDFsWDUxbjFpak5IV0JEdA==",
-          "Content-Type": "application/json"
-        }
+    headers: {
+      "Accept": "application/json, text/plain, */*",
+      "Authorization": "Basic SDZuSklkWHdqQjJnYm40cjdQSDlUa3lKOFhEVGFZeWFEeGxDTDBUQjpSQ3gzYkswOEt1YmxuSDNLOXdxNjJma3BQMkQ2dlNld1Z2cXlrQ2RiZXlYMkdqZVRDWmVlZU80T0ZOUExwb3FjRjJ0d2U0MXVScmM5WHg4OVptcW9RbFVNSzdCQmxsc0JHQW1SVmdHSFVjOEJlMHdxdDFsWDUxbjFpak5IV0JEdA==",
+      "Content-Type": "application/json"
+    }
   })
-  .then(response => {
+    .then(response => {
       console.log(JSON.stringify(response.data.results[0].title))
-      res.json({ title: response.data.results[0].title,
-      url: response.data.results[0].url,
-      image: response.data.results[0].image_240x135})
+      res.json({
+        title: response.data.results[0].title,
+        url: response.data.results[0].url,
+        image: response.data.results[0].image_240x135
+      })
     }).catch(error => {
       console.error(error)
       res.status(500).json({ error: error.message })
-    })  
+    })
 })
 
 
 const generateGptOutput = async (userInput, basePromptPrefix, basePromptSuffix) => {
-      
-    const baseCompletion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [{role: "user", content: `${basePromptPrefix} ${userInput} ${basePromptSuffix}`}],
-      temperature: 0.8
-    });
-    
-    const basePromptOutput = baseCompletion.data.choices[0].message.content;
-  
-    return(basePromptOutput)
-    //res.status(200).json({ output: basePromptOutput });
-  };
 
-  const generateGptOutputSinglePrompt = async (prompt) => {
-      
-    const baseCompletion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [{role: "user", content: prompt}],
-      temperature: 0.8
-    });
-    
-    const basePromptOutput = baseCompletion.data.choices[0].message.content;
-  
-    return(basePromptOutput)
-    //res.status(200).json({ output: basePromptOutput });
-  };
+  const baseCompletion = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "user", content: `${basePromptPrefix} ${userInput} ${basePromptSuffix}` }],
+    temperature: 0.8
+  });
 
-  // const fun = async()=>{const response = await openai.listModels();console.log(response.data)}
-  // fun()
+  const basePromptOutput = baseCompletion.data.choices[0].message.content;
+
+  return (basePromptOutput)
+  //res.status(200).json({ output: basePromptOutput });
+};
+
+const generateGptOutputSinglePrompt = async (prompt) => {
+
+  const baseCompletion = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "user", content: prompt }],
+    temperature: 0.8
+  });
+
+  const basePromptOutput = baseCompletion.data.choices[0].message.content;
+
+  return (basePromptOutput)
+  //res.status(200).json({ output: basePromptOutput });
+};
+
+// const fun = async()=>{const response = await openai.listModels();console.log(response.data)}
+// fun()
 
 
 // client sends user_data and user_personality to get recommended_career
 // expected req: userData={"personality":['f','e'], "answers": [{"quesion":"answer"}, {"q":"a"}]}
-  app.post('/api/recommendedCareer', async(req,res)=>{
+app.post('/api/recommendedCareer', async (req, res) => {
 
-    console.log(req.body.userData)
+  console.log(req.body.userData)
 
-    const userData = req.body.userData;
-    //remove empty fields
-    const removeEmpty = (userData) => {
-      Object.entries(userData).forEach(([key, val])  =>
-        (val && typeof val === 'object') && removeEmpty(val) ||
-        (val === null || val === "") && delete userData[key]
-      );
-      return userData;
-    };
+  const userData = req.body.userData;
+  //remove empty fields
+  const removeEmpty = (userData) => {
+    Object.entries(userData).forEach(([key, val]) =>
+      (val && typeof val === 'object') && removeEmpty(val) ||
+      (val === null || val === "") && delete userData[key]
+    );
+    return userData;
+  };
 
-    const userPersonality = userData.personality; 
-    delete userData["personality"];
+  const userPersonality = userData.personality;
+  delete userData["personality"];
 
-    //making union of personality arrays
-    const personalityOneArray = userPersonality[0]==='r'?rArray:userPersonality[0]==='a'?aArray:userPersonality[0]==='i'?iArray:userPersonality[0]=='s'?sArray:userPersonality[0]==='e'?eArray:userPersonality[0]=='c'?cArray:[...cArray, ...rArray]
-    // const personalityTwoArray = []
-    const  personalityTwoArray = userPersonality.length===1?cArray:userPersonality[1]==='r'?rArray:userPersonality[1]==='a'?aArray:userPersonality[1]==='i'?iArray:userPersonality[1]=='s'?sArray:userPersonality[1]==='e'?eArray:userPersonality[1]=='c'?cArray:[...cArray, ...rArray]
-    
-    const personalityArray = [...personalityOneArray, ...personalityTwoArray]
+  //making union of personality arrays
+  const personalityOneArray = userPersonality[0] === 'r' ? rArray : userPersonality[0] === 'a' ? aArray : userPersonality[0] === 'i' ? iArray : userPersonality[0] == 's' ? sArray : userPersonality[0] === 'e' ? eArray : userPersonality[0] == 'c' ? cArray : [...cArray, ...rArray]
+  // const personalityTwoArray = []
+  const personalityTwoArray = userPersonality.length === 1 ? cArray : userPersonality[1] === 'r' ? rArray : userPersonality[1] === 'a' ? aArray : userPersonality[1] === 'i' ? iArray : userPersonality[1] == 's' ? sArray : userPersonality[1] === 'e' ? eArray : userPersonality[1] == 'c' ? cArray : [...cArray, ...rArray]
 
-    let careerNamesArray = []//array of only career names, excluding streams etc
-    personalityArray.map((obj, index)=>{
-      careerNamesArray[index] = obj['career_name']
-    })
-    
-    const prompt = `Following array contains a career counselling questionnaire answered by a school student. 
+  const personalityArray = [...personalityOneArray, ...personalityTwoArray]
+
+  let careerNamesArray = []//array of only career names, excluding streams etc
+  personalityArray.map((obj, index) => {
+    careerNamesArray[index] = obj['career_name']
+  })
+
+  const prompt = `Following array contains a career counselling questionnaire answered by a school student. 
     [${JSON.stringify(userData.answers)}]
     You are a career counsellor. You have to recommend the most suitable career for the student out of the following array of careers.
     
@@ -157,58 +204,58 @@ const generateGptOutput = async (userInput, basePromptPrefix, basePromptSuffix) 
     
     Output format:
     {"career":"CAREER NAME", "reason":"REASON FOR SELECTING THAT CAREER"}`;
-    recommendedCareerOutput = await generateGptOutputSinglePrompt(prompt);
-    const careerObj = JSON.parse(recommendedCareerOutput);
-    
-    recommendedStreamObj = await chooseStream(careerObj.career, userData)
-    //getting degree name
-    const personalityArrayItem = personalityArray.filter((obj)=>(obj.career_name.toUpperCase()===careerObj.career.toUpperCase()))//todo: trusting form of word to be same (engineer/engineering)
-    const degree = personalityArrayItem[0].degree
+  recommendedCareerOutput = await generateGptOutputSinglePrompt(prompt);
+  const careerObj = JSON.parse(recommendedCareerOutput);
 
-    //getting personality of selected career
-    const personalities = {
-      r: "Realistic (Doer)",
-      i: "Investigative (Thinker)",
-      a: "Artistic (Creator)",
-      s: "Social (Helper)",
-      e: "Enterprising (Persuader)",
-      c: "Conventional (Organizer)"
-    };  
-    const selectedCareerPersonality = personalities[personalityArrayItem[0].category]
-    
-    res.json({output: {personality: selectedCareerPersonality, degrees: [degree], careers: [{name: careerObj.career, reason: careerObj.reason}], streams: [{name: recommendedStreamObj.set, reason: recommendedStreamObj.reason}] }})
+  recommendedStreamObj = await chooseStream(careerObj.career, userData)
+  //getting degree name
+  const personalityArrayItem = personalityArray.filter((obj) => (obj.career_name.toUpperCase() === careerObj.career.toUpperCase()))//todo: trusting form of word to be same (engineer/engineering)
+  const degree = personalityArrayItem[0].degree
+
+  //getting personality of selected career
+  const personalities = {
+    r: "Realistic (Doer)",
+    i: "Investigative (Thinker)",
+    a: "Artistic (Creator)",
+    s: "Social (Helper)",
+    e: "Enterprising (Persuader)",
+    c: "Conventional (Organizer)"
+  };
+  const selectedCareerPersonality = personalities[personalityArrayItem[0].category]
+
+  res.json({ output: { personality: selectedCareerPersonality, degrees: [degree], careers: [{ name: careerObj.career, reason: careerObj.reason }], streams: [{ name: recommendedStreamObj.set, reason: recommendedStreamObj.reason }] } })
 })
 
 
-app.post('/api/recommendUpskillCareers', async(req,res)=>{
-  
+app.post('/api/recommendUpskillCareers', async (req, res) => {
+
   console.log(req.body.userData)
 
   const userData = req.body.userData;
   //remove empty fields
   const removeEmpty = (userData) => {
-    Object.entries(userData).forEach(([key, val])  =>
+    Object.entries(userData).forEach(([key, val]) =>
       (val && typeof val === 'object') && removeEmpty(val) ||
       (val === null || val === "") && delete userData[key]
     );
     return userData;
   };
 
-  const userPersonality = userData.personality; 
+  const userPersonality = userData.personality;
   delete userData["personality"];
 
   //making union of personality arrays
-  const personalityOneArray = userPersonality[0]==='r'?rArray:userPersonality[0]==='a'?aArray:userPersonality[0]==='i'?iArray:userPersonality[0]=='s'?sArray:userPersonality[0]==='e'?eArray:userPersonality[0]=='c'?cArray:[...cArray, ...eArray]
+  const personalityOneArray = userPersonality[0] === 'r' ? rArray : userPersonality[0] === 'a' ? aArray : userPersonality[0] === 'i' ? iArray : userPersonality[0] == 's' ? sArray : userPersonality[0] === 'e' ? eArray : userPersonality[0] == 'c' ? cArray : [...cArray, ...eArray]
   // const personalityTwoArray = []
-  const  personalityTwoArray = userPersonality.length===1?cArray:userPersonality[1]==='r'?rArray:userPersonality[1]==='a'?aArray:userPersonality[1]==='i'?iArray:userPersonality[1]=='s'?sArray:userPersonality[1]==='e'?eArray:userPersonality[1]=='c'?cArray:[...cArray, ...eArray]
-  
+  const personalityTwoArray = userPersonality.length === 1 ? cArray : userPersonality[1] === 'r' ? rArray : userPersonality[1] === 'a' ? aArray : userPersonality[1] === 'i' ? iArray : userPersonality[1] == 's' ? sArray : userPersonality[1] === 'e' ? eArray : userPersonality[1] == 'c' ? cArray : [...cArray, ...eArray]
+
   const personalityArray = [...personalityOneArray, ...personalityTwoArray]
 
   let careerNamesArray = []//array of only career names, excluding streams etc
-  personalityArray.map((obj, index)=>{
+  personalityArray.map((obj, index) => {
     careerNamesArray[index] = obj['career_name']
   })
-  
+
   const promptUsingPersonality = `Following array contains a career counselling questionnaire answered by a school student. 
   [${JSON.stringify(userData.answers)}]
   You are a career counsellor. You have to recommend the most suitable career for the student out of the following array of careers.
@@ -230,7 +277,7 @@ app.post('/api/recommendUpskillCareers', async(req,res)=>{
 
   recommendedCareerOutput = await generateGptOutputSinglePrompt(prompt);
   const careerObj = JSON.parse(recommendedCareerOutput);
-  
+
   // //getting personality of selected career
   // const personalities = {
   //   r: "Realistic (Doer)",
@@ -240,8 +287,8 @@ app.post('/api/recommendUpskillCareers', async(req,res)=>{
   //   e: "Enterprising (Persuader)",
   //   c: "Conventional (Organizer)"
   // };  
-  
-  res.json({output: { career: {name: careerObj.career, reason: careerObj.reason, categories: careerObj.subcategories} }})
+
+  res.json({ output: { career: { name: careerObj.career, reason: careerObj.reason, categories: careerObj.subcategories } } })
 })
 // output format:
 // {
@@ -272,38 +319,39 @@ app.post('/api/recommendUpskillCareers', async(req,res)=>{
 
 // expected req: {career: "asdf", userData: {answers:[{"ds":"sd"},{"dd","ff"}]}}
 // required: third question is about 'kya kya already aata hai'
-app.post('/api/generateRoadmap', async(req, res)=>{
+app.post('/api/generateRoadmap', async (req, res) => {
   console.log(req.body.career)
-  const preKnowledge = req.body.userData.answers.length>2? Object.values(req.body.userData.answers[2])[0] : false
+  const preKnowledge = req.body.userData.answers.length > 2 ? Object.values(req.body.userData.answers[2])[0] : false
 
   prompt = `a student has decided to pursue ${req.body.career} as a career. He needs to learn the necessary skills to land a good ${req.body.career} job. Your job is to create a step by step roadmap of specific skills that the student should learn to achieve his goal.
-  ${preKnowledge?`He has already learnt the following skills: ${preKnowledge}
-  Do not include these skills in the roadmap.`:''} Return an array of 4-6 skills that the student should learn, in the correct order. Never output anything apart from the array.
+  ${preKnowledge ? `He has already learnt the following skills: ${preKnowledge}
+  Do not include these skills in the roadmap.`: ''} Return an array of 4-6 skills that the student should learn, in the correct order. Never output anything apart from the array.
   Output format:
   ["SKILL1", "SKILL2", "SKILL3", "SKILL4", "SKILL5"]`
 
   roadmap = await generateGptOutputSinglePrompt(prompt);
   const roadmapObj = JSON.parse(roadmap);
 
-  const listOfPromises = Promise.all(roadmapObj.map(async function(skill) {
+  const listOfPromises = Promise.all(roadmapObj.map(async function (skill) {
     const getresponse = await axios.get(`https://www.udemy.com/api-2.0/courses/?page_size=2&search=${skill}`, {
       headers: {
-          "Accept": "application/json, text/plain, */*",
-          "Authorization": "Basic SDZuSklkWHdqQjJnYm40cjdQSDlUa3lKOFhEVGFZeWFEeGxDTDBUQjpSQ3gzYkswOEt1YmxuSDNLOXdxNjJma3BQMkQ2dlNld1Z2cXlrQ2RiZXlYMkdqZVRDWmVlZU80T0ZOUExwb3FjRjJ0d2U0MXVScmM5WHg4OVptcW9RbFVNSzdCQmxsc0JHQW1SVmdHSFVjOEJlMHdxdDFsWDUxbjFpak5IV0JEdA==",
-          "Content-Type": "application/json"
-        }
-  })
+        "Accept": "application/json, text/plain, */*",
+        "Authorization": "Basic SDZuSklkWHdqQjJnYm40cjdQSDlUa3lKOFhEVGFZeWFEeGxDTDBUQjpSQ3gzYkswOEt1YmxuSDNLOXdxNjJma3BQMkQ2dlNld1Z2cXlrQ2RiZXlYMkdqZVRDWmVlZU80T0ZOUExwb3FjRjJ0d2U0MXVScmM5WHg4OVptcW9RbFVNSzdCQmxsc0JHQW1SVmdHSFVjOEJlMHdxdDFsWDUxbjFpak5IV0JEdA==",
+        "Content-Type": "application/json"
+      }
+    })
 
-    return  { courseTitle: getresponse.data.results[0].title,
-      courseLink: 'https://www.udemy.com'+getresponse.data.results[0].url,
+    return {
+      courseTitle: getresponse.data.results[0].title,
+      courseLink: 'https://www.udemy.com' + getresponse.data.results[0].url,
       courseImage: getresponse.data.results[0].image_240x135,
       skillName: skill
     };
   }))
   const allResults = await listOfPromises
 
- 
-  res.json({output: allResults})
+
+  res.json({ output: allResults })
 
 })
 // output sample:

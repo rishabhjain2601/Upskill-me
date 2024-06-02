@@ -14,6 +14,8 @@ import Roadmap from "./pages/Roadmap";
 import CareerQuiz from "./pages/CareerQuiz";
 import Aptitude_form from "./pages/Aptitude_form";
 import ChooseCareerCategory from "./pages/ChooseCareerCategory";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -44,6 +46,8 @@ function App() {
           </Route>
           <Route path="/quiz" index element={<CareerQuiz />} />
           <Route path="/choose" index element={<ChooseCareerCategory/>}/>
+          <Route path="/signup" index element={<Signup/>}/>
+          <Route path="/login" index element={<Login/>}/>
         </Route>
       </Routes>
     </Router>
