@@ -20,7 +20,7 @@ const Header = () => {
             </ul>
           </div>
         </div>
-        <div className="py-1 px-4 bg-gray-700 rounded-2xl cursor-pointer">
+        <div onClick={()=>{navigate('/signup')}} className="py-1 px-4 bg-gray-700 rounded-2xl cursor-pointer">
           Login/Signup
         </div>
       </nav>

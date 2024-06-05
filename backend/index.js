@@ -2,11 +2,9 @@ import express from 'express'
 import { Configuration, OpenAIApi } from "openai";
 // const connectDB = require('./db/connectdb.js');
 import connectDB from './db/connectdb.js';
-import './models/User.js'
 import axios from 'axios'
 import './personalityArrays.js'
-import userModel from './models/User.js';
-import bcrypt from 'bcrypt'
+import userRoutes from './routes/user.js'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -37,44 +35,8 @@ app.listen(PORT, (error) => {
 }
 );
 
-app.post('/signup', async (req, res) => {
-  const userExists = await userModel.findOne({ email: req.body.email })
-  if (userExists) {
-    res.send("User already exists")
-  } else {
-    const saltRounds = 10;
-    const data = {
-      name : req.body.name,
-      email : req.body.email,
-      password : req.body.password
-    }
-    const hashedPassword = await bcrypt.hash(data.password, saltRounds);
-    data.password = hashedPassword
-
-    userModel.create(data)
-      .then(users => res.json(users))
-      .catch(err => res.json(err))
-  }
-})
-
-app.post('/login', async (req, res) => {
-  try {
-    const check = await userModel.findOne({email: req.body.email});
-    if(!check){
-      res.send("User does not exist")
-    }
-    const isPasswordMatch = await bcrypt.compare(req.body.password, check.password)
-    if(isPasswordMatch){
-      res.send('Password matched')
-    }
-    else{
-      res.send("Wrong password")
-    }
-
-  } catch{
-    res.send("Wrong details")
-  }
-})
+// For user login and signup
+app.use('', userRoutes)
 
 app.post('/api/gpt', async (req, res) => {
 
